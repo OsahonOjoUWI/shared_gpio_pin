@@ -4,14 +4,14 @@
 
 ## Important Files
 
- Source file: main/user_main.c
- Output file: main/lab1_q2_816005001.out
+ Source file: main/user_main.c,
+ Output file: main/lab1_q2_816005001.out,
  Binary file: build/gpio.bin
 
 ## GPIO pins
 
- GPIO2: output
- GPIO0: input, interrupt on falling edge  
+ GPIO2: output,
+ GPIO0: input with interrupt on falling edge  
 
 ## Pin connections
 
