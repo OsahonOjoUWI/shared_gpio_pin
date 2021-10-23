@@ -1,41 +1,23 @@
-# GPIO Interrupt Example
+# Shared GPIO Pin Example
 
- This code shows how to configure GPIO and how to use a GPIO interrupt.
+ This code allows two tasks to share a GPIO pin using a mutex.
 
 ## Important Files
 
- Source file: main/user_main.c,
- Output file: main/lab1_q2_816005001.out,
+ Source file: main/shared_gpio_pin.c,
+ Output file: main/lab2_q1_816005001.out,
  Binary file: build/gpio.bin
 
-## GPIO pins
+## GPIO pin
 
- GPIO2: output,
- GPIO0: input with interrupt on falling edge  
+ GPIO2: output
 
 ## Pin connections
 
- Connect GPIO2 with GPIO0. 
- Generate pulses on GPIO2 to trigger an interrupts on GPIO0.
+ Connect GPIO2 with an LED. 
+ Generate pulses on GPIO2 to turn LED on an off.
 
 ## Expected output
 ...
-
-I (0) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0
-I (0) gpio: GPIO[0]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:2
-
-I (0) main: Semaphore created!
-
-I (0) main: cnt: 0
-
-I (1) main: cnt: 1
-
-I (1) main: Released semaphore!
-
-I (1) main: GPIO[0] intr, val: 0
-
-I (1) main: Semaphore obtained!
-
-I (2) main: cnt: 2
 
 ...
