@@ -21,11 +21,11 @@
 #define GPIO_OUTPUT_PIN      2
 #define GPIO_OUTPUT_PIN_SEL  (1ULL<<GPIO_OUTPUT_PIN)
 
-// static const char *TAG = "main";
 SemaphoreHandle_t xMutex = NULL;
 
 static void turn_pin_on()
 {
+    int counter = 0;
     printf("At turn_pin_on: entry\n");
 
     // turn GPIO pin on - check mutex first
@@ -36,13 +36,17 @@ static void turn_pin_on()
     }
 
     // actively wait for 0.5s
-    int nTicks = (int) xTaskGetTickCount();
-    int nTicksPlus500 = nTicks + 500;
+    long nTicks = (long) xTaskGetTickCount();
+    long nTicksPlus500 = nTicks + 500;
+    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
     do
     {
-        printf("At turn_pin_on: busy waiting\n");
+        counter++;
+        if (counter % 100000 == 0)
+            printf("At turn_pin_on: busy waiting\n");
     }
-    while ((int)xTaskGetTickCount() < nTicksPlus500);
+    while ((long)xTaskGetTickCount() < nTicksPlus500);
+    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
 
     // task-delay for 1s
     vTaskDelay(1000 / portTICK_RATE_MS);
@@ -52,6 +56,7 @@ static void turn_pin_on()
 
 static void turn_pin_off()
 {
+    int counter = 0;
     printf("At turn_pin_off: entry\n");
 
     // turn GPIO pin off - check mutex first
@@ -62,13 +67,17 @@ static void turn_pin_off()
     }
 
     // actively wait for 0.5s
-    int nTicks = (int) xTaskGetTickCount();
-    int nTicksPlus500 = nTicks + 500;
+    long nTicks = (long) xTaskGetTickCount();
+    long nTicksPlus500 = nTicks + 500;
+    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
     do
     {
-        printf("At turn_pin_off: busy waiting\n");
+        counter++;
+        if (counter % 100000 == 0)
+            printf("At turn_pin_off: busy waiting\n");
     }
-    while ((int)xTaskGetTickCount() < nTicksPlus500);
+    while ((long)xTaskGetTickCount() < nTicksPlus500);
+    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
 
     // task-delay for 1s
     vTaskDelay(1000 / portTICK_RATE_MS);
