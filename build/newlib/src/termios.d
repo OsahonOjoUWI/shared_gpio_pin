@@ -1,9 +1,9 @@
 src/termios.o: \
  /opt/esp_sdk/ESP8266_RTOS_SDK/components/newlib/src/termios.c \
- /home/osahon/esp/gpio/build/include/sdkconfig.h \
+ /home/osahon/esp/shared_gpio_pin/build/include/sdkconfig.h \
  /opt/esp_sdk/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/termios.h
 
-/home/osahon/esp/gpio/build/include/sdkconfig.h:
+/home/osahon/esp/shared_gpio_pin/build/include/sdkconfig.h:
 
 /opt/esp_sdk/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/termios.h:
 /opt/esp_sdk/ESP8266_RTOS_SDK/components/newlib/src/termios.c:
