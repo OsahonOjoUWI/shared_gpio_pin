@@ -21,83 +21,109 @@
 #define GPIO_OUTPUT_PIN      2
 #define GPIO_OUTPUT_PIN_SEL  (1ULL<<GPIO_OUTPUT_PIN)
 
+gpio_config_t io_conf;
 SemaphoreHandle_t xMutex = NULL;
 
+//the task needs an infinite loop
+//otherwise, it (the task) will terminate
 static void turn_pin_on()
 {
-    int counter = 0;
+    static int counter = 0;
     printf("At turn_pin_on: entry\n");
 
-    // turn GPIO pin on - check mutex first
-    if (xSemaphoreTake(xMutex, (TickType_t) 10))
+    for (;;)
     {
-        gpio_set_level(GPIO_OUTPUT_PIN, 1);
-        xSemaphoreGive(xMutex);
-    }
+        printf("At turn_pin_on: infinite for loop iteration\n");
 
-    // actively wait for 0.5s
-    long nTicks = (long) xTaskGetTickCount();
-    long nTicksPlus500 = nTicks + 500;
-    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
-    do
-    {
-        counter++;
-        if (counter % 100000 == 0)
-            printf("At turn_pin_on: busy waiting\n");
-    }
-    while ((long)xTaskGetTickCount() < nTicksPlus500);
-    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
+        // turn GPIO pin on - check mutex first
+        if (xSemaphoreTake(xMutex, (TickType_t) 10))
+        {
+            gpio_set_level(GPIO_OUTPUT_PIN, 1);
+            xSemaphoreGive(xMutex);
+        }
 
-    // task-delay for 1s
-    vTaskDelay(1000 / portTICK_RATE_MS);
+        // actively wait for 0.5s
+        long nTicks = (long) xTaskGetTickCount();
+        long nTicksPlus500 = nTicks + 500;
+        printf("Tick count before 0.5s active wait: 0x%x\n", xTaskGetTickCount());
+        do
+        {
+            counter++;
+            if (counter % 400000 == 0)
+                printf("At turn_pin_on: busy waiting\n");
+        }
+        while ((long)xTaskGetTickCount() < nTicksPlus500);
+
+        counter = 0;
+        printf("Tick count after 0.5s active wait: 0x%x\n", xTaskGetTickCount());
+
+        // task-delay for 1s
+        vTaskDelay(1000 / portTICK_RATE_MS);
+    }
 
     printf("At turn_pin_on: exit\n");
 }
 
+//the task needs an infinite loop
+//otherwise, it (the task) will terminate
 static void turn_pin_off()
 {
-    int counter = 0;
+    static int counter = 0;
     printf("At turn_pin_off: entry\n");
 
-    // turn GPIO pin off - check mutex first
-    if (xSemaphoreTake(xMutex, (TickType_t) 10))
+    for (;;)
     {
-        gpio_set_level(GPIO_OUTPUT_PIN, 0);
-        xSemaphoreGive(xMutex);
-    }
+        printf("At turn_pin_off: infinite for loop iteration\n");
 
-    // actively wait for 0.5s
-    long nTicks = (long) xTaskGetTickCount();
-    long nTicksPlus500 = nTicks + 500;
-    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
-    do
-    {
-        counter++;
-        if (counter % 100000 == 0)
-            printf("At turn_pin_off: busy waiting\n");
-    }
-    while ((long)xTaskGetTickCount() < nTicksPlus500);
-    printf("Tick Count: 0x%x\n", xTaskGetTickCount());
+        // turn GPIO pin off - check mutex first
+        if (xSemaphoreTake(xMutex, (TickType_t) 10))
+        {
+            gpio_set_level(GPIO_OUTPUT_PIN, 0);
+            xSemaphoreGive(xMutex);
+        }
 
-    // task-delay for 1s
-    vTaskDelay(1000 / portTICK_RATE_MS);
+        // actively wait for 0.5s
+        long nTicks = (long) xTaskGetTickCount();
+        long nTicksPlus500 = nTicks + 500;
+        printf("Tick count before 0.5s active wait: 0x%x\n", xTaskGetTickCount());
+        do
+        {
+            counter++;
+            if (counter % 100000 == 0)
+                printf("At turn_pin_off: busy waiting\n");
+        }
+        while ((long)xTaskGetTickCount() < nTicksPlus500);
+
+        counter = 0;
+        printf("Tick count after 0.5s active wait: 0x%x\n", xTaskGetTickCount());
+
+        // task-delay for 1s
+        vTaskDelay(1000 / portTICK_RATE_MS);
+    }
 
     printf("At turn_pin_off: exit\n");
 }
 
+//the task needs an infinite loop
+//otherwise, it (the task) will terminate
 static void print_status()
 {
     printf("At print_status: entry\n");
 
-    // print status message
-    int level = gpio_get_level(GPIO_OUTPUT_PIN);
-    if (level == 0)
-        printf("GPIO pin %d is LOW\n", GPIO_OUTPUT_PIN);
-    else
-        printf("GPIO pin %d is HIGH\n", GPIO_OUTPUT_PIN);
+    for (;;)
+    {
+        printf("At print_status: infinite for loop iteration\n");
 
-    // task-delay for 1s
-    vTaskDelay(1000 / portTICK_RATE_MS);
+        // print status message
+        int level = gpio_get_level(GPIO_OUTPUT_PIN);
+        if (level == 0)
+            printf("GPIO pin %d is LOW\n", GPIO_OUTPUT_PIN);
+        else
+            printf("GPIO pin %d is HIGH\n", GPIO_OUTPUT_PIN);
+
+        // task-delay for 1s
+        vTaskDelay(1000 / portTICK_RATE_MS);
+    }
 
     printf("At print_status: exit\n");
 }
@@ -107,7 +133,11 @@ void app_main(void)
     printf("At app_main: entry\n");
 
     printf("At app_main: GPIO configuration\n");
-    gpio_config_t io_conf;
+
+    //let io_conf be global variable so that the pin configuration
+    //is not lost when app_main terminates
+    //gpio_config_t io_conf;
+
     // disable interrupt
     io_conf.intr_type = GPIO_INTR_DISABLE;
     // set as output mode
@@ -135,10 +165,10 @@ void app_main(void)
     xTaskCreate(turn_pin_off, "turn_pin_off", 2048, NULL, 9, NULL);
     xTaskCreate(print_status, "print_status", 2048, NULL, 8, NULL);
 
-    while(1)
+    /*while(1)
     {
         printf("At app_main: infinite while loop\n");
-    }
+    }*/
 
     printf("At app_main: exit\n");
 }
