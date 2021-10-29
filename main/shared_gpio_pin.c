@@ -99,7 +99,7 @@ static void turn_pin_off()
         do
         {
             counter++;
-            if (counter % 100000 == 0)
+            if (counter % 400000 == 0)
                 printf("At turn_pin_off: busy waiting\n");
         }
         while ((long)xTaskGetTickCount() < nTicksPlus500);
