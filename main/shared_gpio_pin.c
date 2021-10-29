@@ -26,9 +26,14 @@ SemaphoreHandle_t xMutex = NULL;
 
 //the task needs an infinite loop
 //otherwise, it (the task) will terminate
+//in other words, the funciton's lifetime is
+//throughout the program. Hence, static.
 static void turn_pin_on()
 {
+    //the counter variable's lifetime if throughout the program
+    //hence, static.
     static int counter = 0;
+
     printf("At turn_pin_on: entry\n");
 
     for (;;)
@@ -66,9 +71,14 @@ static void turn_pin_on()
 
 //the task needs an infinite loop
 //otherwise, it (the task) will terminate
+//in other words, the funciton's lifetime is
+//throughout the program. Hence, static.
 static void turn_pin_off()
 {
+    //the counter variable's lifetime if throughout the program
+    //hence, static.
     static int counter = 0;
+
     printf("At turn_pin_off: entry\n");
 
     for (;;)
@@ -106,6 +116,8 @@ static void turn_pin_off()
 
 //the task needs an infinite loop
 //otherwise, it (the task) will terminate
+//in other words, the funciton's lifetime is
+//throughout the program. Hence, static.
 static void print_status()
 {
     printf("At print_status: entry\n");
